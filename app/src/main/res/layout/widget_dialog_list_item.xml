@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/dialog_list_item_ic"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="3dip" />
+
+    <RelativeLayout
+        android:id="@+id/dialog_list_item_cbx_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical">
+
+        <CheckedTextView
+            android:id="@+id/dialog_list_item_cbx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:paddingLeft="6dip"
+            android:paddingRight="6dip"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <CheckedTextView
+            android:id="@+id/dialog_list_item_rdobtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkMark="?android:attr/listChoiceIndicatorSingle"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center_vertical" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/dialog_list_item_cbx_rl"
+        android:layout_toRightOf="@+id/dialog_list_item_ic"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_list_item_cbx_lb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:singleLine="true"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/dialog_list_item_cbx_sublb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:paddingBottom="4dp"
+            android:singleLine="true"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

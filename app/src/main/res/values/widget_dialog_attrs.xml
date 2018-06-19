@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="widgetDialogTitleText" format="reference" />
+    <attr name="widgetDialogSubtitleText" format="reference" />
+    <attr name="widgetDialogIcon" format="reference" />
+    <attr name="widgetDialogTitleProgress" format="reference" />
+    <attr name="widgetDialogTitleDivider" format="reference" />
+    <attr name="widgetDialogMessageText" format="reference" />
+    <attr name="widgetDialogProgress" format="reference" />
+    <attr name="widgetDialogProgressText" format="reference" />
+    <attr name="widgetDialogHorizontalProgress" format="reference" />
+    <attr name="widgetDialogHorizontalProgressText" format="reference" />
+    <attr name="widgetDialogHorizontalProgressMessage" format="reference" />
+    <attr name="widgetDialogWebView" format="reference" />
+    <attr name="widgetDialogListView" format="reference" />
+    <attr name="widgetDialogGridView" format="reference" />
+    <attr name="widgetDialogEditText" format="reference" />
+    <attr name="widgetDialogCheckBox" format="reference" />
+    <attr name="widgetDialogButtonDivider" format="reference" />
+    <attr name="widgetDialogButtonDividers" format="reference" />
+    <attr name="widgetDialogButton" format="reference" />
+</resources>

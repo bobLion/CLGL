@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/header"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header"
+        android:background="@color/header">
+
+        <ImageView
+            android:id="@+id/iv_main_home"
+            android:layout_width="@dimen/icon_width_30"
+            android:layout_height="@dimen/icon_width_30"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/widget_container_first_margin"
+            app:srcCompat="@drawable/ic_home_black_24dp"
+            android:tint="@color/white"
+            android:clickable="true"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            style="@style/Widget.TextView.Header.Main"
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:text="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/img_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_search_black_24dp"
+            tools:ignore="VectorDrawableCompat"
+            android:tint="@color/white"
+            android:clickable="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <ListView
+            android:id="@+id/lv_vehicle_num"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+</LinearLayout>

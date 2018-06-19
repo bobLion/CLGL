@@ -1,0 +1,309 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ****************************** -->
+    <!-- *****   Default Dialog   ***** -->
+    <!-- ****************************** -->
+
+    <style name="widgetDialogTitleDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">@color/widget_dialog_title_di_bg</item>
+    </style>
+
+    <style name="widgetDialogIcon">
+        <item name="android:layout_width">34dp</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="widgetDialogTitleProgress">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:indeterminateOnly">true</item>
+    </style>
+
+    <style name="widgetScrollableText">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:focusable">true</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="widgetDialogTitleText" parent="@style/widgetScrollableText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">6dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingTop">3dp</item>
+    </style>
+
+    <style name="widgetDialogSubtitle" parent="@style/widgetScrollableText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">6dp</item>
+        <item name="android:layout_marginTop">-4dp</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="widgetDialogMessageText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="widgetDialogIndeterminateProgress">
+        <item name="android:layout_width">55dp</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:indeterminateOnly">true</item>
+    </style>
+
+    <style name="widgetDialogProgressMessage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="widgetDialogHorizontalProgress" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:keepScreenOn">true</item>
+        <!-- <item name="android:progressDrawable">@drawable/dialog_pro_hor</item> -->
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+    <style name="widgetDialogHorizontalProgressText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="widgetDialogHorizontalProgressMessage" parent="@style/widgetScrollableText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="widgetDialogWebView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignWithParentIfMissing">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layerType">software</item>
+    </style>
+
+    <style name="widgetDialogGridView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignWithParentIfMissing">true</item>
+        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:numColumns">auto_fit</item>
+        <item name="android:stretchMode">columnWidth</item>
+        <!-- <item name="android:listSelector">@drawable/dialog_list_sl</item> -->
+    </style>
+
+    <style name="widgetDialogListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!-- <item name="android:listSelector">@drawable/dialog_list_sl</item> -->
+
+        <item name="android:layout_alignWithParentIfMissing">true</item>
+        <item name="android:cacheColorHint">#00000000</item>
+    </style>
+
+    <style name="widgetDialogEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="widgetDialogCheckBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+
+    <style name="widgetDialogButtonDividers">
+        <item name="android:layout_width">1.0px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#FF6F6F6F</item>
+    </style>
+
+    <style name="widgetDialogBottomButton">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">64dip</item>
+        <item name="android:background">@drawable/widget_dialog_list_sl</item>
+    </style>
+
+    <style name="widgetDialogButtonDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">#FF6F6F6F</item>
+    </style>
+
+    <!-- ******************************* -->
+    <!-- *****  Holo Light Dialog  ***** -->
+    <!-- ******************************* -->
+
+    <style name="widgetDialogTitleText.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogSubtitle.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogMessageText.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogProgressMessage.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogHorizontalProgress.Light">
+        <!--
+        <item name="android:progressDrawable">@drawable/dialog_pro_hor</item>
+        <item name="android:indeterminateDrawable">@drawable/dialog_pro_indeterminate_hor</item>
+        -->
+    </style>
+
+    <style name="widgetDialogHorizontalProgressText.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogHorizontalProgressMessage.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogGridView.Light">
+        <!-- <item name="android:listSelector">@drawable/dialog_list_sl</item> -->
+    </style>
+
+    <style name="widgetDialogListView.Light">
+        <!-- <item name="android:listSelector">@drawable/dialog_list_sl</item> -->
+    </style>
+
+    <style name="widgetDialogEditText.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+        <!-- <item name="android:background">@drawable/dialog_edt_txt</item> -->
+    </style>
+
+    <style name="widgetDialogCheckBox.Light">
+
+        <!-- <item name="android:button">@drawable/dialog_btn_chk</item> -->
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+    </style>
+
+    <style name="widgetDialogButtonDividers.Light">
+        <item name="android:background">#FF6F6F6F</item>
+    </style>
+
+    <style name="widgetDialogBottomButton.Light">
+        <item name="android:textColor">@color/widget_dialog_light_theme_text</item>
+        <!-- <item name="android:background">@drawable/dialog_list_sl</item> -->
+    </style>
+
+    <style name="widgetDialogButtonDivider.Light">
+        <item name="android:background">#FF6F6F6F</item>
+    </style>
+
+    <style name="Widget.Theme.Dialog" parent="android:style/Theme.Holo.Dialog">
+        <item name="android:windowBackground">@drawable/widget_dialog_full</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="widgetDialogTitleText">@style/widgetDialogTitleText</item>
+        <item name="widgetDialogSubtitleText">@style/widgetDialogSubtitle</item>
+        <item name="widgetDialogIcon">@style/widgetDialogIcon</item>
+        <item name="widgetDialogTitleProgress">@style/widgetDialogTitleProgress</item>
+        <item name="widgetDialogTitleDivider">@style/widgetDialogTitleDivider</item>
+        <item name="widgetDialogMessageText">@style/widgetDialogMessageText</item>
+        <item name="widgetDialogProgress">@style/widgetDialogIndeterminateProgress</item>
+        <item name="widgetDialogProgressText">@style/widgetDialogProgressMessage</item>
+        <item name="widgetDialogHorizontalProgress">@style/widgetDialogHorizontalProgress</item>
+        <item name="widgetDialogHorizontalProgressText">@style/widgetDialogHorizontalProgressText
+        </item>
+        <item name="widgetDialogHorizontalProgressMessage">
+            @style/widgetDialogHorizontalProgressMessage
+        </item>
+        <item name="widgetDialogWebView">@style/widgetDialogWebView</item>
+        <item name="widgetDialogListView">@style/widgetDialogListView</item>
+        <item name="widgetDialogGridView">@style/widgetDialogGridView</item>
+        <item name="widgetDialogEditText">@style/widgetDialogEditText</item>
+        <item name="widgetDialogCheckBox">@style/widgetDialogCheckBox</item>
+        <item name="widgetDialogButtonDivider">@style/widgetDialogButtonDivider</item>
+        <item name="widgetDialogButtonDividers">@style/widgetDialogButtonDividers</item>
+        <item name="widgetDialogButton">@style/widgetDialogBottomButton</item>
+    </style>
+
+    <style name="Widget.Theme.Dialog.Light">
+        <item name="android:windowBackground">@drawable/widget_dialog_full</item>
+        <item name="android:textColor">?android:attr/textColorPrimaryInverseDisableOnly</item>
+        <item name="widgetDialogTitleText">@style/widgetDialogTitleText.Light</item>
+        <item name="widgetDialogSubtitleText">@style/widgetDialogSubtitle.Light</item>
+        <item name="widgetDialogMessageText">@style/widgetDialogMessageText.Light</item>
+        <item name="widgetDialogProgressText">@style/widgetDialogProgressMessage.Light</item>
+        <item name="widgetDialogHorizontalProgress">@style/widgetDialogHorizontalProgress.Light
+        </item>
+        <item name="widgetDialogHorizontalProgressText">
+            @style/widgetDialogHorizontalProgressText.Light
+        </item>
+        <item name="widgetDialogHorizontalProgressMessage">
+            @style/widgetDialogHorizontalProgressMessage.Light
+        </item>
+        <item name="widgetDialogListView">@style/widgetDialogListView.Light</item>
+        <item name="widgetDialogGridView">@style/widgetDialogGridView.Light</item>
+        <item name="widgetDialogButtonDivider">@style/widgetDialogButtonDivider.Light</item>
+        <item name="widgetDialogButtonDividers">@style/widgetDialogButtonDividers.Light</item>
+        <item name="widgetDialogButton">@style/widgetDialogBottomButton.Light</item>
+    </style>
+</resources>

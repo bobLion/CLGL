@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_tip_pswd"
+            style="@style/Widget.TextView.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="票据密码："/>
+        <TextView
+            android:id="@+id/ticket_pswd"
+            style="@style/Widget.TextView.content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123456"
+            android:layout_toRightOf="@id/tv_tip_pswd"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_ticket_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已使用"
+            android:background="@color/material_green"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_tip_use_department"
+            style="@style/Widget.TextView.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用单位："/>
+        <TextView
+            android:id="@+id/ticket_department"
+            style="@style/Widget.TextView.content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="平凉"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            style="@style/Widget.TextView.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用时间："/>
+        <TextView
+            android:id="@+id/tv_use_time"
+            style="@style/Widget.TextView.content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="123456"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/waiting_login_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/icon_width_20"
+                android:layout_height="@dimen/icon_width_20"
+                android:src="@mipmap/ic_login_name" />
+
+            <com.bob.android.clgl.widget.CustomEditText
+                android:id="@+id/et_login_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/widget_container_length_20"
+                android:paddingRight="@dimen/widget_container_length_10"
+                android:background="@null"
+                android:digits="0123456789.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ*"
+                android:drawableRight="@mipmap/ic_edit_text_delbtn"
+                android:textColorHint="@color/font_edit_hint"
+                android:textColor="@android:color/white"
+                android:text="cb"
+                android:hint="@string/edt_name_hint"/>
+        </LinearLayout>
+
+        <View
+            style="@style/white_horizontal_line"
+            android:layout_marginTop="@dimen/widget_container_length_10" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <ImageView
+                android:layout_width="@dimen/icon_width_20"
+                android:layout_height="@dimen/icon_width_20"
+                android:src="@mipmap/ic_login_password" />
+
+            <com.bob.android.clgl.widget.CustomEditText
+                android:id="@+id/et_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/widget_container_length_20"
+                android:paddingRight="@dimen/widget_container_length_10"
+                android:background="@null"
+                android:inputType="textPassword"
+                android:digits="0123456789.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ*"
+                android:drawableRight="@mipmap/ic_edit_text_delbtn"
+                android:textColorHint="@color/font_edit_hint"
+                android:textColor="@android:color/white"
+                android:hint="@string/edt_password_hint"
+                android:text="cb8523" />
+        </LinearLayout>
+
+        <View
+            style="@style/white_horizontal_line"
+            android:layout_marginTop="@dimen/widget_container_length_10" />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_height_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/widget_container_length_20"
+            app:v_styleId="@array/button_login_wave_color"
+            android:clickable="true"
+            android:text="确 认 登 录" />
+
+    </LinearLayout>
+
+</RelativeLayout>

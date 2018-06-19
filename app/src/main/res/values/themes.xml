@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="button_login_wave_color">
+        <item>@style/LightLoginWaveColorButtonRippleStyle</item>
+    </array>
+    <array name="button_sure_wave_color">
+        <item>@style/LightSureWaveColorButtonRippleStyle</item>
+    </array>
+    <array name="button_cancel_wave_color">
+        <item>@style/LightCancelWaveColorButtonRippleStyle</item>
+    </array>
+    <array name="edittext">
+        <item>@style/LightEditText</item>
+    </array>
+</resources>

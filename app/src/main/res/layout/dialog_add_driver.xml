@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:padding="15dp"
+    android:id="@+id/lin_dialog"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/Widget.TextView.Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="填写跟车人信息"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/Widget.TextView.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跟车人姓名："/>
+        <com.bob.android.clgl.widget.CustomEditText
+            android:id="@+id/edt_driver_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/Widget.TextView.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跟车人电话："/>
+        <com.bob.android.clgl.widget.CustomEditText
+            android:id="@+id/edt_driver_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <Button
+            android:id="@+id/dialog_btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="取  消"/>
+
+        <Button
+            android:id="@+id/dialog_btn_sure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:text="确  认"/>
+    </LinearLayout>
+
+</LinearLayout>

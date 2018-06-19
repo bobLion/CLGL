@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">车辆管理系统</string>
+
+    <string name="tip_loading_anim_title">努力加载中&#8230;</string>
+
+    <string name="edt_name_hint">请输入用户名</string>
+    <string name="edt_password_hint">请输入密码</string>
+    <string name="tip_name_is_empty">用户名不能为空</string>
+    <string name="tip_password_is_empty">密码不能为空</string>
+
+    <string name="tv_vehicle_ticket_num">发票密码：</string>
+    <string name="tv_vehicle_ticket_type">发票类型：</string>
+    <string name="tv_vehicle_num">车牌号码：</string>
+    <string name="tv_vehicle_department">所属单位：</string>
+    <string name="tv_vehicle_weight">车辆净重(T)：</string>
+    <string name="tv_vehicle_all_weight">车辆毛重(T)：</string>
+    <string name="tv_current_date_time">当前时间：</string>
+
+    <string name="tv_tip_remaided_ticket">剩余票数：</string>
+    <string name="tv_button_create_password">生成密码</string>
+    <string name="tv_button_remaided_ticket">剩余票数</string>
+    <string name="tv_button_used_ticket">已用票查询</string>
+    <string name="tv_button_unused_ticket">未用票查询</string>
+    <string name="tv_button_check_ticket">票据查询</string>
+
+</resources>
