@@ -23,13 +23,13 @@ import java.util.List;
  * @Describe TODO
  */
 
-public class UsedTicketAdapter extends BaseAdapter {
+public class TicketAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<TicketEntity> usedTicketList = new ArrayList<>();
 
 
-    public UsedTicketAdapter(Context context, List<TicketEntity> usedTickets){
+    public TicketAdapter(Context context, List<TicketEntity> usedTickets){
         this.mContext = context;
         this.usedTicketList = usedTickets;
     }
@@ -55,31 +55,34 @@ public class UsedTicketAdapter extends BaseAdapter {
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_check_ticket,null);
-            holder.tvTicketPswd = (TextView)convertView.findViewById(R.id.ticket_pswd);
-            holder.tvDepartment = (TextView)convertView.findViewById(R.id.ticket_pswd);
+            holder.tvDepartment = (TextView)convertView.findViewById(R.id.ticket_department);
             holder.tvUsedTime = (TextView)convertView.findViewById(R.id.tv_use_time);
-            holder.tvTicketStatus = (TextView)convertView.findViewById(R.id.tv_ticket_status);
+//            holder.tvTicketStatus = (TextView)convertView.findViewById(R.id.tv_ticket_status);
+            holder.tvTipTime = (TextView)convertView.findViewById(R.id.tv_tip_time);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
 
         TicketEntity ticketEntity = usedTicketList.get(position);
-        holder.tvTicketPswd.setText(ticketEntity.getTicketPswd());
         holder.tvDepartment.setText(ticketEntity.getDepartment());
         holder.tvUsedTime.setText(ticketEntity.getUsedTime());
         if(ticketEntity.getStatus().equals("0")){
+            holder.tvTicketPswd.setVisibility(View.INVISIBLE);
             holder.tvTicketStatus.setText("未使用");
             holder.tvTicketStatus.setBackground(mContext.getResources().getDrawable(R.color.material_red));
+            holder.tvTipTime.setText("生成时间：");
         }else if(ticketEntity.getStatus().equals("1")){
+            holder.tvTicketPswd.setText(ticketEntity.getTicketPswd());
             holder.tvTicketStatus.setText("已使用");
             holder.tvTicketStatus.setBackground(mContext.getResources().getDrawable(R.color.material_green));
+            holder.tvTipTime.setText("使用时间：");
         }
         return convertView;
     }
 
     public class ViewHolder{
-        private TextView tvTicketPswd,tvDepartment,tvUsedTime,tvTicketStatus;
+        private TextView tvTicketPswd,tvDepartment,tvUsedTime,tvTicketStatus,tvTipTime;
 
     }
 }

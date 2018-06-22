@@ -93,49 +93,117 @@
                 android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/lin_start_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开始时间："
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/widget_dialog_light_theme_text"/>
+
+                <TextView
+                    style="@style/Widget.TextView.content"
+                    android:id="@+id/tv_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15sp"
+                    android:text="yyyy-MM-dd"
+                    android:clickable="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_end_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp">
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结束时间："
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_dialog_light_theme_text"/>
+            <TextView
+                style="@style/Widget.TextView.content"
+                android:id="@+id/tv_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:clickable="true"
+                android:text="yyyy-MM-dd"
+                android:textSize="15sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="15dp"
+            android:layout_marginTop="15dp"
+            android:gravity="bottom">
 
             <Button
-                android:id="@+id/btn_used_ticket"
+                android:id="@+id/btn_vehicle_data"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="已使用票据"/>
+                android:background="@color/material_green"
+                android:textColor="@color/white"
+                android:text="进车量查询"/>
             <Button
-                android:id="@+id/un_used_ticket"
+                android:id="@+id/btn_ticket_data"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="未使用票据"/>
+                android:text="票据查询"
+                android:background="@color/material_blue"
+                android:textColor="@color/white"
+                android:layout_marginLeft="10dp"/>
             <Button
                 android:id="@+id/btn_remained_ticket"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="剩余票据"/>
+                android:text="剩余票据"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"/>
         </LinearLayout>
 
-        <View
+       <!-- <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/bg_gray"
-            android:layout_marginTop="10dp"/>
-        <ListView
-            android:id="@+id/lv_tickets"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_marginTop="10dp"/>-->
 
-        <TextView
-            android:id="@+id/tv_select"
-            style="@style/Widget.TextView.Header"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="请选择要查看的票据类型"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Widget.TextView.Header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总  计："/>
+            <TextView
+                style="@style/Widget.TextView.content"
+                android:id="@+id/tv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>

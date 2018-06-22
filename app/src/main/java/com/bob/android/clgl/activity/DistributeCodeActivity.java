@@ -1,14 +1,11 @@
 package com.bob.android.clgl.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bob.android.clgl.R;
 import com.bob.android.clgl.application.GlobalApplication;
@@ -26,12 +22,15 @@ import com.bob.android.clgl.config.AppConfig;
 import com.bob.android.clgl.dialog.EasyDialog;
 import com.bob.android.clgl.entity.CreatePswdEntity;
 import com.bob.android.clgl.entity.DriverEntity;
+import com.bob.android.clgl.entity.ReceiverEntity;
+import com.bob.android.clgl.entity.ReceiverListEntity;
+import com.bob.android.clgl.entity.RemindEntity;
 import com.bob.android.clgl.http.HttpCallback;
 import com.bob.android.clgl.http.HttpUtils;
 import com.bob.android.clgl.login.UserLogin;
-import com.bob.android.clgl.widget.CustomEditText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,38 +52,49 @@ public class DistributeCodeActivity extends BaseActivity {
     LinearLayout root;
     @BindView(R.id.sp_psqd_type)
     Spinner spPswdType;
-   /* @BindView(R.id.sp_driver)
-    Spinner mSpDriver;*/
     @BindView(R.id.btn_create_password)
     Button btnCreatePassword;
     @BindView(R.id.btn_check_ticket)
     Button btnCheckTicket;
     @BindView(R.id.tv_select_driver)
     TextView mTvDriver;
+    @BindView(R.id.tv_tip_user)
+    TextView mTvTip;
 
+    private String codeType;
+    private int receiveId;
+    private Context mContext;
+    private UserLogin userLogin;
     private final int CREATE_PSWD = 1111;
     private final int SELECT_DRIVER = 1112;
-    private String DRIVER_INFO = "driverList";
-    private String codeType;
-    private Context mContext;
-    private EasyDialog mDialog;
-    private UserLogin userLogin;
-    private CreatePswdEntity mCreatePswdEntity;
-    private List<String> codeTypeList = new ArrayList();
-    private List<String> driverNameList = new ArrayList<>();
-    private List<DriverEntity> driverEntities = new ArrayList<>();
-    private ArrayAdapter<String> driverAdapter;
+    private final int REMAIND_TICKET = 1113;
+    private ReceiverListEntity.DataBean receiverBean;
+    private List<String> codeTypeList = new ArrayList<String>();
+
     private String[] codeStrs = new String[]{"黄色(四分车)", "白色(社会车)", "蓝色(环卫三吨)", "紫色(环卫五吨)"};
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case CREATE_PSWD:
-                    mCreatePswdEntity = (CreatePswdEntity) msg.obj;
-                    tvPassword.setText(mCreatePswdEntity.getData().getPwdValue());
-                    tvRemaidTicket.setText(String.valueOf(mCreatePswdEntity.getCount()));
+                    CreatePswdEntity mCreatePswdEntity = (CreatePswdEntity) msg.obj;
+                    if(null != mCreatePswdEntity){
+                        if(mCreatePswdEntity.getData().getGenerateState().equals("1")){// 请求成功
+                            tvPassword.setText(mCreatePswdEntity.getData().getPwdValue());
+                        }else if(mCreatePswdEntity.getData().getGenerateState().equals("2")){//请求失败
+                            mTvTip.setVisibility(View.VISIBLE);
+                            mTvTip.setText(mCreatePswdEntity.getData().getMsg());
+                            tvPassword.setText("000000");
+                        }
+                    }
                     break;
+                case REMAIND_TICKET:
+                    RemindEntity remindEntity = (RemindEntity) msg.obj;
+                    if(null != remindEntity && null != remindEntity.getData()){
+                        tvRemaidTicket.setText(String.valueOf(remindEntity.getData().getTicketNum()));
+                    }
                 default:
                     break;
             }
@@ -113,11 +123,24 @@ public class DistributeCodeActivity extends BaseActivity {
 
     @OnClick(R.id.btn_create_password)
     public void createPassword(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                findRemindTicket();
+            }
+        }).run();
+        mTvTip.setVisibility(View.GONE);
+        if(null != receiverBean){
+            receiveId = receiverBean.getReceiveId();
+        }
+        if(null != receiverBean){
+            receiveId = receiverBean.getReceiveId();
+        }
         HttpUtils.with(this).url(AppConfig.requestUrl(AppConfig.CREATE_PASSWORD))
                 .post()
                 .addParam("userId", userLogin.getData().getUserId())
                 .addParam("ticketType", codeType)
-                .addParam("receiveId", 0)
+                .addParam("receiveId", receiveId)
                 .execute(new HttpCallback<CreatePswdEntity>() {
                     @Override
                     public void onSuccess(CreatePswdEntity result) {
@@ -138,9 +161,7 @@ public class DistributeCodeActivity extends BaseActivity {
 
     private void initData() {
         userLogin = GlobalApplication.getInstance().getUserLogin();
-        for (int i = 0; i < codeStrs.length; i++) {
-            codeTypeList.add(codeStrs[i]);
-        }
+        codeTypeList.addAll(Arrays.asList(codeStrs));
         ArrayAdapter<String> codeTypeAdapter = new ArrayAdapter<String>(mContext
                 , android.R.layout.simple_spinner_item
                 , codeTypeList);
@@ -160,7 +181,7 @@ public class DistributeCodeActivity extends BaseActivity {
                         codeType = "13";
                         break;
                     case 3:
-                        codeType = "13";
+                        codeType = "12";
                         break;
                     default:
                         break;
@@ -173,47 +194,22 @@ public class DistributeCodeActivity extends BaseActivity {
             }
         });
 
-        /*if (driverNameList.size() == 0) {
-            driverNameList.add("添加跟车人信息 +");
-        } else if (driverNameList.size() > 1) {
-            for (int i = 0; i < driverNameList.size() + 1; i++) {
-                driverNameList.add(driverEntities.get(i).getDriverName());
-            }
-        }
-        driverAdapter = new ArrayAdapter<String>(mContext
-                , android.R.layout.simple_spinner_item
-                , driverNameList);
-        driverAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpDriver.setAdapter(driverAdapter);
-        mSpDriver.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    dialog();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case SELECT_DRIVER:
                 if(null != data){
-                    driverEntities = GlobalApplication.getInstance().getDaoSession().getDriverEntityDao().loadAll();
-                    int position = data.getIntExtra("position",-1);
-                    if(position != -1){
-                        mTvDriver.setText(driverEntities.get(position ).getDriverName()
-                        +"  ("+driverEntities.get(position).getDriverNum()+")");
-                    }else{
-                        mTvDriver.setText(driverEntities.get(driverEntities.size()-1).getDriverName()
-                                +"  ("+driverEntities.get(driverEntities.size()-1).getDriverNum()+")");
+                    ReceiverEntity mReceiverEntity = (ReceiverEntity) data.getSerializableExtra("receiver");
+                    if(null != mReceiverEntity){
+                        mTvDriver.setText(mReceiverEntity.getData().getReceiveName()
+                                +"  ("+ mReceiverEntity.getData().getReceivePhone()+")");
+                    }
+                    receiverBean = (ReceiverListEntity.DataBean) data.getSerializableExtra("dataBean");
+                    if(null != receiverBean){
+                        mTvDriver.setText(receiverBean.getReceiveName()
+                                +"  ("+receiverBean.getReceivePhone()+")");
                     }
                 }
         }
@@ -240,8 +236,36 @@ public class DistributeCodeActivity extends BaseActivity {
         Intent intent = new Intent(mContext,SelectDriverActivity.class);
         startActivityForResult(intent,SELECT_DRIVER);
     }
+
+    private void findRemindTicket(){
+        HttpUtils.with(this).url(AppConfig.requestUrl(AppConfig.REMAIND_TICKET))
+                .post()
+                .addParam("userId",userLogin.getData().getUserId())
+                .addParam("ticketType",codeType)
+                .execute(new HttpCallback<RemindEntity>() {
+                    @Override
+                    public void onSuccess(RemindEntity result) {
+                        Message msg = mHandler.obtainMessage();
+                        msg.what = REMAIND_TICKET;
+                        msg.obj = result;
+                        mHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+    }
+
     @Override
     protected boolean onBackQuit() {
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
     }
 }

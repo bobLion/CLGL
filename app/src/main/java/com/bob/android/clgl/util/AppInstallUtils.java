@@ -55,9 +55,9 @@ public class AppInstallUtils {
 	}
 
 	private void installApp(String fileName) {
-		String targetFileName = AppConfig.getLocalDefaultPath().concat("/")
+		/*String targetFileName = AppConfig.getLocalDefaultPath().concat("/")
 				.concat(fileName);
-		copyApkFromAssets(mContext, fileName, targetFileName);
+		copyApkFromAssets(mContext, fileName, targetFileName);*/
 //		PackageUtils.installNormal(mContext, targetFileName);
 	}
 

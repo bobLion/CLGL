@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bob.android.clgl.R;
 import com.bob.android.clgl.activity.VehicleNumActivity;
+import com.bob.android.clgl.entity.VehicleNumEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ import java.util.List;
 public class VehicleNumAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<String> vehicleNunList = new ArrayList<>();
+    private List<VehicleNumEntity.DataBean> vehicleNunList = new ArrayList<>();
 
 
-    public VehicleNumAdapter(Context context,List<String> vehicleNunList){
+    public VehicleNumAdapter(Context context,List<VehicleNumEntity.DataBean> vehicleNunList){
         this.mContext = context;
         this.vehicleNunList = vehicleNunList;
     }
@@ -57,8 +58,8 @@ public class VehicleNumAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        String vehicleNum = vehicleNunList.get(position);
-        holder.mTvVehicleNum.setText(vehicleNum);
+        VehicleNumEntity.DataBean  vehicleNum = vehicleNunList.get(position);
+        holder.mTvVehicleNum.setText(vehicleNum.getCarno());
         return convertView;
     }
 

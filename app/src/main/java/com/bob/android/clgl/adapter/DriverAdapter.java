@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bob.android.clgl.R;
 import com.bob.android.clgl.entity.DriverEntity;
+import com.bob.android.clgl.entity.ReceiverListEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ import java.util.List;
 public class DriverAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<DriverEntity> driverEntityList = new ArrayList<>();
+    private List<ReceiverListEntity.DataBean> driverEntityList = new ArrayList<>();
 
 
-    public DriverAdapter(Context context, List<DriverEntity> driverEntities){
+    public DriverAdapter(Context context, List<ReceiverListEntity.DataBean> driverEntities){
         this.mContext = context;
         this.driverEntityList = driverEntities;
     }
@@ -58,9 +59,9 @@ public class DriverAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        DriverEntity vehicleNum = driverEntityList.get(position);
-        holder.tvDriverName.setText(vehicleNum.getDriverName());
-        holder.tvDriverPhone.setText(vehicleNum.getDriverNum());
+        ReceiverListEntity.DataBean receiver = driverEntityList.get(position);
+        holder.tvDriverName.setText(receiver.getReceiveName());
+        holder.tvDriverPhone.setText(receiver.getReceivePhone());
         return convertView;
     }
 

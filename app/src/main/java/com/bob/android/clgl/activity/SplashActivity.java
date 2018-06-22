@@ -22,9 +22,7 @@ import com.bob.android.clgl.util.PermissionsCheckerUtil;
 public class SplashActivity extends BaseActivity {
 
     private Context mContext;
-    private EasyDialog mEasyDialog = null;
     private Handler handler = new Handler();
-    private int startFrom;//111表示从通知栏进来
     private Runnable splashRunnable = new SplashRunnable();
     private Intent loginIntent;
     //所需权限
@@ -49,9 +47,6 @@ public class SplashActivity extends BaseActivity {
         loginIntent = new Intent(mContext,LoginActivity.class);
         initPermission();
     }
-
-
-
 
     private void initPermission() {
         if (mPermissionsCheckerUtil.lacksPermissions(PERMISSIONS)) {

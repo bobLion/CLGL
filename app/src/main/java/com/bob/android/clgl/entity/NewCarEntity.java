@@ -18,6 +18,15 @@ public class NewCarEntity {
     private JsonStrBean jsonStr;
     private String state;
     private String msg;
+    private int pwdId;
+
+    public int getPwdId() {
+        return pwdId;
+    }
+
+    public void setPwdId(int pwdId) {
+        this.pwdId = pwdId;
+    }
 
     public JsonStrBean getJsonStr() {
         return jsonStr;

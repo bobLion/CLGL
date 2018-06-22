@@ -70,6 +70,16 @@ public class CreatePswdEntity {
          */
 
         private String pwdValue;
+        private String generateState;// 1 成功  2：失败
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
 
         public String getPwdValue() {
             return pwdValue;
@@ -77,6 +87,14 @@ public class CreatePswdEntity {
 
         public void setPwdValue(String pwdValue) {
             this.pwdValue = pwdValue;
+        }
+
+        public String getGenerateState() {
+            return generateState;
+        }
+
+        public void setGenerateState(String generateState) {
+            this.generateState = generateState;
         }
     }
 }

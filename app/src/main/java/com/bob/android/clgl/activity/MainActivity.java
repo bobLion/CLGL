@@ -1,6 +1,7 @@
 package com.bob.android.clgl.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -33,7 +34,6 @@ import com.bob.android.clgl.R;
 import com.bob.android.clgl.base.BaseActivity;
 import com.bob.android.clgl.config.AppConfig;
 import com.bob.android.clgl.dialog.EasyDialog;
-import com.bob.android.clgl.entity.CardEntity;
 import com.bob.android.clgl.entity.NewCarEntity;
 import com.bob.android.clgl.entity.VehicleEntity;
 import com.bob.android.clgl.http.HttpCallback;
@@ -52,12 +52,10 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
 import com.rey.material.widget.Button;
-import com.rey.material.widget.SnackBar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,18 +65,6 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-    /* CustomEditText mEdtVehicleTicket;
-     CustomEditText mEdtVehicleTicketType;
-     TextView mEdtVehicleNum;
-     CustomEditText mEdtVehicleDepartment;
-     CustomEditText mEdtVehicleWeight;
-     CustomEditText mEdtVehicleAllWeight;
-     CustomEditText mEdtCurrentTime;
-     ImageView mImgScan, mImageSearch;
-     LinearLayout mLinVehicleNum;
-     LinearLayout mLinSps;
-     Spinner mSpVehicleNum;
-     Spinner mSpVehicleType;*/
     @BindView(R.id.iv_main_home)
     ImageView ivMainHome;
     @BindView(R.id.tv_title)
@@ -122,27 +108,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String qrcode;
     private EasyDialog mDialog;
-    private List<String> vehicleNumList = new ArrayList<>();
-    private List<String> vehicleType = new ArrayList<>();
-    private List<VehicleEntity> vehicleEntityList = new ArrayList<>();
     private int model = 0;//0 语音输入 1 手动输入
 
     private final static int GET_VEHICLE_INFO = 1111;
     private final static int CONFIRM_SUCCESS = 1112;
     private final static int CONFIRM_FAILURE = 1113;
     private final static int TURN_TO_SELECT_VEHICLE_NUM = 1114;
-
-    private NewCarEntity mNewCarEntity;
-    // 语音识别对象
+    /* 语音识别对象 */
     private SpeechRecognizer recognizer;
-
-    //语音合成对象
-    private SpeechSynthesizer speaker;
-
     //识别出来的句子
     StringBuilder sentence = null;
+    private int pwdId = -1;
+    private String ticketType = "";
 
-
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
@@ -152,26 +131,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     mSwipeRefresh.setEnabled(false);
                     model = 0;
                     imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
-                    mNewCarEntity = (NewCarEntity) msg.obj;
-                    if (null != mNewCarEntity) {
+                    NewCarEntity mNewCarEntity = (NewCarEntity) msg.obj;
+                    if (null != mNewCarEntity && null!= mNewCarEntity.getState()) {
                         if(mNewCarEntity.getState().equals(AppConfig.RESPONSE_FAILURE)){
-                            Toast.makeText(mContext,mNewCarEntity.getMsg(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, mNewCarEntity.getMsg(),Toast.LENGTH_LONG).show();
                             return;
                         }
-//                        String cleanWeight = mNewCarEntity.getJsonStr().get净重().substring(0, mNewCarEntity.getJsonStr().get净重().indexOf("."));
-//                        String allWeight = mNewCarEntity.getJsonStr().get毛重().substring(0, mNewCarEntity.getJsonStr().get毛重().indexOf("."));
-//                        edtVehicleAllWeight.setText(allWeight);
-//                        edtVehicleWeight.setText(cleanWeight);
-//                        edtVehicleNum.setText(mNewCarEntity.getJsonStr().get车号());
+                        pwdId = mNewCarEntity.getPwdId();
+                        ticketType = mNewCarEntity.getJsonStr().getInvoiceType();
+                        String cleanWeight = mNewCarEntity.getJsonStr().get净重().substring(0, mNewCarEntity.getJsonStr().get净重().indexOf("."));
+                        String allWeight = mNewCarEntity.getJsonStr().get毛重().substring(0, mNewCarEntity.getJsonStr().get毛重().indexOf("."));
+                        edtVehicleAllWeight.setText(allWeight);
+                        edtVehicleWeight.setText(cleanWeight);
+                        edtVehicleNum.setText(mNewCarEntity.getJsonStr().get车号());
                         edtVehicleDepartment.setText(mNewCarEntity.getJsonStr().getAreaName());
                         edtVehicleTicketType.setText(mNewCarEntity.getJsonStr().getInvoiceType());
+                        DateFormat fmt = new SimpleDateFormat("yyyyMMddHHmm");
+                        String dateStr = fmt.format(System.currentTimeMillis());
+                        edtCurrentDateTime.setText(dateStr);
                     }
                     break;
                 case CONFIRM_SUCCESS:
+                    qrcode = "";
+                    pwdId = -1;
+                    ticketType = "";
+                    setValueNull();
+                    model = 0;
+                    imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
                     Toast.makeText(mContext, "信息确认成功！", Toast.LENGTH_LONG).show();
-                    btnConfirm.setClickable(false);
-                    btnConfirm.setBackgroundColor(getResources().getColor(R.color.bg_gray));
-                    btnConfirm.setTextColor(getResources().getColor(R.color.widget_dialog_light_theme_text));
                     break;
                 case CONFIRM_FAILURE:
                     Toast.makeText(mContext, "信息确认失败！", Toast.LENGTH_LONG).show();
@@ -191,11 +178,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mContext = this;
         initView();
         initStatusBar();
-        initSpinnerData();
 
         //初始化语音对象
         recognizer = SpeechRecognizer.createRecognizer(this, mInitListener);
-        speaker = SpeechSynthesizer.createSynthesizer(this, mInitListener);
+        SpeechSynthesizer speaker = SpeechSynthesizer.createSynthesizer(this, mInitListener);
 
         //设置听写参数
         recognizer.setParameter(SpeechConstant.DOMAIN, "iat");
@@ -203,7 +189,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         recognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         //设置为普通话
         recognizer.setParameter(SpeechConstant.ACCENT, "mandarin ");
-
         //设置发音人
         speaker.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");
         //设置语速
@@ -244,12 +229,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void afterTextChanged(Editable s) {
                 model = 1;
                 imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
-               /* imgSearch.setVisibility(View.VISIBLE);
-                qrcode = edtVehicleTicket.getText().toString().trim();
-//                requestData(qrcode);
-                DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                String dateStr = fmt.format(System.currentTimeMillis());
-                edtCurrentDateTime.setText(dateStr);*/
             }
         });
 
@@ -270,78 +249,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
             }
         });
-    }
-
-    private void initSpinnerData() {
-
-     /*   for (int i = 0;i<20;i++){
-            if(i%2 == 0 && i%3 != 0 && i%5 != 0){
-                VehicleEntity vehicleEntity = new VehicleEntity();
-                vehicleEntity.setVehicleTypeCode("2").setVehicleTypeName("A类车").setVehicleNum("沪A1234"+i);
-                vehicleEntityList.add(vehicleEntity);
-            }else if(i%3 == 0){
-                VehicleEntity vehicleEntity = new VehicleEntity();
-                vehicleEntity.setVehicleTypeCode("3").setVehicleTypeName("B类车").setVehicleNum("沪A1234"+i);
-                vehicleEntityList.add(vehicleEntity);
-            }else if(i%5 == 0){
-                VehicleEntity vehicleEntity = new VehicleEntity();
-                vehicleEntity.setVehicleTypeCode("5").setVehicleTypeName("C类车").setVehicleNum("沪A1234"+i);
-                vehicleEntityList.add(vehicleEntity);
-            }
-        }
-        for (VehicleEntity entity : vehicleEntityList) {
-            if(!vehicleType.contains(entity.getVehicleTypeName())){
-                vehicleType.add(entity.getVehicleTypeName());
-            }
-        }
-        for (VehicleEntity entity : vehicleEntityList) {
-            vehicleNumList.add(entity.getVehicleNum());
-        }
-        ArrayAdapter<String> departmentEntityArrayAdapter = new ArrayAdapter<String>(mContext
-                ,android.R.layout.simple_spinner_item
-                , vehicleType);
-
-        departmentEntityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpVehicleType.setAdapter(departmentEntityArrayAdapter);
-        mSpVehicleType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                typePosition = position;
-                initVehicleNumList(vehicleType.get(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                initVehicleNumList(vehicleType.get(0));
-                typePosition = 0;
-            }
-        });*/
-    }
-
-    private void initVehicleNumList(String type) {
-        vehicleNumList.clear();
-       /* for (VehicleEntity vehicleEntity : vehicleEntityList) {
-            if(vehicleEntity.getVehicleTypeName().equals(type)){
-                vehicleNumList.add(vehicleEntity.getVehicleNum());
-            }
-        }*/
-        ArrayAdapter<String> EntityArrayAdapter = new ArrayAdapter<String>(mContext
-                , android.R.layout.simple_spinner_item
-                , vehicleNumList);
-        EntityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spVehicleNum.setAdapter(EntityArrayAdapter);
-        spVehicleNum.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
     }
 
     // 开始扫码
@@ -369,6 +276,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             qrcode = scanResult.trim();
             edtVehicleTicket.setText(qrcode.substring(0, qrcode.length() - 1));
             qrcode = edtVehicleTicket.getText().toString();
+            @SuppressLint("SimpleDateFormat")
             DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String dateStr = fmt.format(System.currentTimeMillis());
             edtCurrentDateTime.setText(dateStr);
@@ -378,13 +286,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     requestData(qrcode);
                 }
             }).run();
-        } else if (requestCode == TURN_TO_SELECT_VEHICLE_NUM) {
-            String vehicleNum = data.getStringExtra("vehicleNum");
-            edtVehicleNum.setText(vehicleNum);
+        } else if (requestCode == TURN_TO_SELECT_VEHICLE_NUM ) {
+            if(null != data){
+                String vehicleNum = data.getStringExtra("vehicleNum");
+                edtVehicleNum.setText(vehicleNum);
+            }
         }
     }
 
     private void requestData(String qrCode) {
+        if(qrCode.equals("")){
+            model = 0;
+            imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
+            Toast.makeText(mContext,"请输入口令密码！",Toast.LENGTH_LONG).show();
+            setValueNull();
+            return;
+        }
         if (null == mDialog) {
             mDialog = DialogManager.getCircularDialog(mContext, true);
         }
@@ -436,23 +353,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_vehicle_num:
-//                linSps.setVisibility(View.VISIBLE);
-//                edtVehicleNum.setVisibility(View.GONE);
                 Intent intent = new Intent(MainActivity.this, VehicleNumActivity.class);
                 startActivityForResult(intent, TURN_TO_SELECT_VEHICLE_NUM);
                 break;
             case R.id.img_scan:
                 if(model == 0){
                     recognizer.startListening(recognizerListener);
+                    setValueNull();
                 }else if(model == 1){
+                    qrcode = edtVehicleTicket.getText().toString().trim();
                     requestData(qrcode);
                 }
-//                startRecord.setImageResource(R.drawable.voice_full);
-//                startQrCode();
-                break;
-            case R.id.img_search:
-//                requestData();
-
                 break;
             case R.id.btn_confirm:
                 new Thread(new Runnable() {
@@ -472,35 +383,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (null != mDialog && !mDialog.isShowing()) {
             mDialog = DialogManager.getCircularDialog(mContext, true);
         }
-        String ticktNum = edtVehicleTicket.getText().toString().trim();
+        String pwdValue = edtVehicleTicket.getText().toString().trim();
         String vehicleNum = edtVehicleNum.getText().toString().trim();
         String department = edtVehicleDepartment.getText().toString().trim();
         String vehicleAllWeight = edtVehicleAllWeight.getText().toString().trim();
         String vehicleWeight = edtVehicleWeight.getText().toString().trim();
-        String currentTime = edtCurrentDateTime.getText().toString().trim();
-
-//        VehicleEntity vehicleEntity = new VehicleEntity();
-//        vehicleEntity.setInvoiceNum(ticktNum).setLicenseNum(vehicleNum).setNetWeight(vehicleWeight)
-//                .setRoughWeight(vehicleAllWeight).setNowTime(currentTime).setUnit(department);
+//        String currentTime = edtCurrentDateTime.getText().toString().trim();
         HttpUtils.with(this).url(AppConfig.requestUrl(AppConfig.UPLOAD_VEHICLE_INFO))
                 .post()
+                .addParam("pwdValue",pwdValue)
+                .addParam("pwdId",pwdId)
+                .addParam("ticketType",ticketType)
                 .addParam("carNo", vehicleNum)
                 .addParam("netWeight", vehicleWeight)
                 .addParam("roughWeight", vehicleAllWeight)
                 .addParam("unit", department)
-                .addParam("invoiceNum", ticktNum)
-                .addParam("nowTime", currentTime).execute(new HttpCallback<String>() {
+                .execute(new HttpCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 if (null != mDialog) {
                     mDialog.dismiss();
                 }
                 if (result.contains(AppConfig.RESPONSE_FAILURE)) {
-
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = CONFIRM_FAILURE;
+                    mHandler.sendMessage(msg);
+                }else{
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = CONFIRM_SUCCESS;
+                    mHandler.sendMessage(msg);
                 }
-                Message msg = mHandler.obtainMessage();
-                msg.what = CONFIRM_SUCCESS;
-                mHandler.sendMessage(msg);
             }
 
             @Override
@@ -539,36 +451,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             //结束录音后，根据识别出来的句子，通过语音合成进行反馈
             Toast.makeText(MainActivity.this, "结束录音", Toast.LENGTH_SHORT).show();
             Pattern pattern = Pattern.compile("[0-9]{1,}");
-            Matcher matcher = pattern.matcher((CharSequence)sentence.toString());
-            boolean result = matcher.matches();
-            if(result){
-                edtVehicleTicket.setText(sentence.toString());
-                requestData(sentence.toString());
+            if(null!=sentence && !sentence.equals("") && !sentence.equals("。")){
+                Matcher matcher = pattern.matcher((CharSequence)sentence.toString());
+                boolean result = matcher.matches();
+                if(result){
+                    edtVehicleTicket.setText(sentence.toString());
+                    requestData(sentence.toString());
+                }else{
+                    model = 0;
+                    imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
+                    Toast.makeText(mContext,"仅支持数字！",Toast.LENGTH_LONG).show();
+                }
             }else{
-                Toast.makeText(mContext,"仅支持数字！",Toast.LENGTH_LONG).show();
+                model = 0;
+                imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
+                Toast.makeText(mContext,"请使用语音或者手动输入密码！",Toast.LENGTH_LONG).show();
+                return;
             }
-           /* if (sentence.indexOf("你好") != -1) {
-                speaker.startSpeaking("你ha", synthesizerListener);
-            } else if (sentence.indexOf("你好") != -1) {
-                speaker.startSpeaking("你好", synthesizerListener);
-            } else if (sentence.indexOf("时间") != -1) {
-                //获取本地时间
-                Date date = new Date();
-                DateFormat format = new SimpleDateFormat("HH:mm:ss");
-                String time = format.format(date);
-                //提取时，分，秒
-                String[] timeArray = time.split(":");
-                String hour = timeArray[0];
-                String minute = timeArray[1];
-                String seconds = timeArray[2];
-
-                speaker.startSpeaking("您好，现在是北京时间" + hour + "时" + minute + "分" + seconds + "秒", synthesizerListener);
-
-            } else if (sentence.indexOf("你是男的还是女的") != -1) {
-                speaker.startSpeaking("难道你听不出来吗", synthesizerListener);
-            } else {
-                speaker.startSpeaking("我听不懂你在说什么", synthesizerListener);
-            }*/
         }
 
         @Override
@@ -660,4 +559,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         }
     };
+
+    private void setValueNull(){
+        edtVehicleTicket.setText("");
+        edtVehicleTicketType.setText("");
+        edtVehicleNum.setText("");
+        edtVehicleDepartment.setText("");
+        edtVehicleWeight.setText("");
+        edtVehicleAllWeight.setText("");
+        edtCurrentDateTime.setText("");
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

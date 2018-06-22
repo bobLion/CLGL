@@ -73,6 +73,26 @@
             style="@style/white_horizontal_line"
             android:layout_marginTop="@dimen/widget_container_length_10" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/icon_width_10"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <CheckBox
+                android:id="@+id/cb_auto_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:button="@drawable/check_box_login"
+                android:text="@string/tv_login_check"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_16" />
+        </RelativeLayout>
+
         <com.rey.material.widget.Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"

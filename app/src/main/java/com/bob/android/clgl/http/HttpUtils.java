@@ -161,7 +161,7 @@ public class HttpUtils{
         }
 
         for(Map.Entry<String,Object> entry:params.entrySet()){
-            stringBuffer.append(entry.getKey() + "-" + entry.getValue() + "&");
+            stringBuffer.append(entry.getKey() + "=" + entry.getValue() + "&");
         }
 
         stringBuffer.deleteCharAt(stringBuffer.length() - 1);
