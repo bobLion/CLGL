@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,14 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bob.android.clgl.R;
 import com.bob.android.clgl.application.GlobalApplication;
 import com.bob.android.clgl.base.BaseActivity;
 import com.bob.android.clgl.config.AppConfig;
-import com.bob.android.clgl.dialog.EasyDialog;
 import com.bob.android.clgl.entity.CreatePswdEntity;
-import com.bob.android.clgl.entity.DriverEntity;
 import com.bob.android.clgl.entity.ReceiverEntity;
 import com.bob.android.clgl.entity.ReceiverListEntity;
 import com.bob.android.clgl.entity.RemindEntity;
@@ -60,6 +60,8 @@ public class DistributeCodeActivity extends BaseActivity {
     TextView mTvDriver;
     @BindView(R.id.tv_tip_user)
     TextView mTvTip;
+    @BindView(R.id.switch_refresh)
+    SwipeRefreshLayout switchRefresh;
 
     private String codeType;
     private int receiveId;
@@ -70,6 +72,7 @@ public class DistributeCodeActivity extends BaseActivity {
     private final int REMAIND_TICKET = 1113;
     private ReceiverListEntity.DataBean receiverBean;
     private List<String> codeTypeList = new ArrayList<String>();
+    private ReceiverEntity mReceiverEntity;
 
     private String[] codeStrs = new String[]{"黄色(四分车)", "白色(社会车)", "蓝色(环卫三吨)", "紫色(环卫五吨)"};
 
@@ -80,10 +83,11 @@ public class DistributeCodeActivity extends BaseActivity {
             switch (msg.what) {
                 case CREATE_PSWD:
                     CreatePswdEntity mCreatePswdEntity = (CreatePswdEntity) msg.obj;
-                    if(null != mCreatePswdEntity){
-                        if(mCreatePswdEntity.getData().getGenerateState().equals("1")){// 请求成功
+                    if (null != mCreatePswdEntity) {
+                        if (mCreatePswdEntity.getData().getGenerateState().equals("1")) {// 请求成功
                             tvPassword.setText(mCreatePswdEntity.getData().getPwdValue());
-                        }else if(mCreatePswdEntity.getData().getGenerateState().equals("2")){//请求失败
+                            findRemindTicket();
+                        } else if (mCreatePswdEntity.getData().getGenerateState().equals("2")) {//请求失败
                             mTvTip.setVisibility(View.VISIBLE);
                             mTvTip.setText(mCreatePswdEntity.getData().getMsg());
                             tvPassword.setText("000000");
@@ -92,7 +96,8 @@ public class DistributeCodeActivity extends BaseActivity {
                     break;
                 case REMAIND_TICKET:
                     RemindEntity remindEntity = (RemindEntity) msg.obj;
-                    if(null != remindEntity && null != remindEntity.getData()){
+                    if (null != remindEntity && null != remindEntity.getData()) {
+                        switchRefresh.setRefreshing(false);
                         tvRemaidTicket.setText(String.valueOf(remindEntity.getData().getTicketNum()));
                     }
                 default:
@@ -113,7 +118,19 @@ public class DistributeCodeActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (userLogin.getData().getRoleId() .equals( AppConfig.USER_LINGDAO)) {
+        switchRefresh.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        switchRefresh.setEnabled(true);
+        switchRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                findRemindTicket();
+            }
+        });
+        if (userLogin.getData().getRoleId().equals(AppConfig.USER_LINGDAO)) {
             btnCreatePassword.setVisibility(View.GONE);
         } else if (userLogin.getData().getRoleId().equals(AppConfig.USER_YEWUYUAN)) {
             btnCheckTicket.setVisibility(View.GONE);
@@ -123,18 +140,14 @@ public class DistributeCodeActivity extends BaseActivity {
 
     @OnClick(R.id.btn_create_password)
     public void createPassword(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                findRemindTicket();
-            }
-        }).run();
         mTvTip.setVisibility(View.GONE);
-        if(null != receiverBean){
+        if (null != receiverBean ) {
             receiveId = receiverBean.getReceiveId();
-        }
-        if(null != receiverBean){
-            receiveId = receiverBean.getReceiveId();
+        }else if(null != mReceiverEntity){
+            receiveId = mReceiverEntity.getData().getReceiveId();
+        }else{
+            Toast.makeText(mContext,"请选择跟车人！",Toast.LENGTH_LONG).show();
+            return;
         }
         HttpUtils.with(this).url(AppConfig.requestUrl(AppConfig.CREATE_PASSWORD))
                 .post()
@@ -198,18 +211,18 @@ public class DistributeCodeActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case SELECT_DRIVER:
-                if(null != data){
-                    ReceiverEntity mReceiverEntity = (ReceiverEntity) data.getSerializableExtra("receiver");
-                    if(null != mReceiverEntity){
+                if (null != data) {
+                   mReceiverEntity = (ReceiverEntity) data.getSerializableExtra("receiver");
+                    if (null != mReceiverEntity) {
                         mTvDriver.setText(mReceiverEntity.getData().getReceiveName()
-                                +"  ("+ mReceiverEntity.getData().getReceivePhone()+")");
+                                + "  (" + mReceiverEntity.getData().getReceivePhone() + ")");
                     }
                     receiverBean = (ReceiverListEntity.DataBean) data.getSerializableExtra("dataBean");
-                    if(null != receiverBean){
+                    if (null != receiverBean) {
                         mTvDriver.setText(receiverBean.getReceiveName()
-                                +"  ("+receiverBean.getReceivePhone()+")");
+                                + "  (" + receiverBean.getReceivePhone() + ")");
                     }
                 }
         }
@@ -230,18 +243,17 @@ public class DistributeCodeActivity extends BaseActivity {
     }
 
 
-
     @OnClick(R.id.tv_select_driver)
-    public void selectDriver(View view){
-        Intent intent = new Intent(mContext,SelectDriverActivity.class);
-        startActivityForResult(intent,SELECT_DRIVER);
+    public void selectDriver(View view) {
+        Intent intent = new Intent(mContext, SelectDriverActivity.class);
+        startActivityForResult(intent, SELECT_DRIVER);
     }
 
-    private void findRemindTicket(){
+    private void findRemindTicket() {
         HttpUtils.with(this).url(AppConfig.requestUrl(AppConfig.REMAIND_TICKET))
                 .post()
-                .addParam("userId",userLogin.getData().getUserId())
-                .addParam("ticketType",codeType)
+                .addParam("userId", userLogin.getData().getUserId())
+                .addParam("ticketType", codeType)
                 .execute(new HttpCallback<RemindEntity>() {
                     @Override
                     public void onSuccess(RemindEntity result) {

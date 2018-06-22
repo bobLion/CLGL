@@ -3,6 +3,7 @@ package com.bob.android.clgl.activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bob.android.clgl.R;
@@ -34,6 +36,8 @@ import org.json.JSONArray;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +52,7 @@ public class SelectDriverActivity extends BaseActivity {
     @BindView(R.id.root)
     LinearLayout root;
 
+    private Context mContext;
     private UserLogin userLogin;
     private final int SELECT_DRIVER = 1112;
     private final int SAVE_RECEIVER_SUCESS = 1001;
@@ -150,11 +155,14 @@ public class SelectDriverActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-//                Toast.makeText(mContext, "添加跟车人成功" + driverName.getText().toString().trim() + "  " + driverPhone.getText().toString().trim(), Toast.LENGTH_LONG).show();
                 DriverEntity driverEntity = new DriverEntity();
+                if(isPhone(driverPhone.getText().toString())){
+                    driverEntity.setDriverNum(driverPhone.getText().toString().trim());
+                    dialog.dismiss();
+                }else{
+                    return;
+                }
                 driverEntity.setDriverName(driverName.getText().toString().trim());
-                driverEntity.setDriverNum(driverPhone.getText().toString().trim());
                 HttpUtils.with(mContext).url(AppConfig.requestUrl(AppConfig.SAVE_RECEIVER))
                         .post()
                         .addParam("receiveName",driverName.getText().toString().trim())
@@ -216,5 +224,21 @@ public class SelectDriverActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public  boolean isPhone(String phone) {
+        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+        if (phone.length() != 11) {
+            Toast.makeText(mContext,"手机号应为11位数",Toast.LENGTH_LONG).show();
+            return false;
+        } else {
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(phone);
+            boolean isMatch = m.matches();
+            if (!isMatch) {
+                Toast.makeText(mContext,"请填入正确的手机号",Toast.LENGTH_LONG).show();
+            }
+            return isMatch;
+        }
     }
 }

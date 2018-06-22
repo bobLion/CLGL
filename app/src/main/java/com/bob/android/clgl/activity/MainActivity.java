@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.switch_refresh)
     SwipeRefreshLayout mSwipeRefresh;
 
-    private String qrcode;
+    private String qrcode = "";
     private EasyDialog mDialog;
     private int model = 0;//0 语音输入 1 手动输入
 
@@ -128,13 +128,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_VEHICLE_INFO:
-                    mSwipeRefresh.setEnabled(false);
+                    mSwipeRefresh.setRefreshing(false);
                     model = 0;
                     imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
                     NewCarEntity mNewCarEntity = (NewCarEntity) msg.obj;
                     if (null != mNewCarEntity && null!= mNewCarEntity.getState()) {
                         if(mNewCarEntity.getState().equals(AppConfig.RESPONSE_FAILURE)){
                             Toast.makeText(mContext, mNewCarEntity.getMsg(),Toast.LENGTH_LONG).show();
+                            mSwipeRefresh.setRefreshing(false);
                             return;
                         }
                         pwdId = mNewCarEntity.getPwdId();
@@ -231,22 +232,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
             }
         });
-
-        mSwipeRefresh.setEnabled(false);
+        mSwipeRefresh.setEnabled(true);
         mSwipeRefresh.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        mSwipeRefresh.setEnabled(true);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (null != qrcode) {
-                    requestData(qrcode);
-                }else{
-                    mSwipeRefresh.setEnabled(false);
-                }
+                requestData();
             }
         });
     }
@@ -283,7 +278,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    requestData(qrcode);
+                    requestData();
                 }
             }).run();
         } else if (requestCode == TURN_TO_SELECT_VEHICLE_NUM ) {
@@ -294,12 +289,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void requestData(String qrCode) {
-        if(qrCode.equals("")){
+    private void requestData() {
+        qrcode = edtVehicleTicket.getText().toString().trim();
+        if(qrcode.equals("")){
             model = 0;
             imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
             Toast.makeText(mContext,"请输入口令密码！",Toast.LENGTH_LONG).show();
             setValueNull();
+            mSwipeRefresh.setRefreshing(false);
             return;
         }
         if (null == mDialog) {
@@ -307,7 +304,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         mDialog.show();
         HttpUtils.with(this).url(AppConfig.requestUrl(AppConfig.GET_VEHICLE_INFO))
-                .addParam("pwdValue",qrCode)
+                .addParam("pwdValue",qrcode)
                 .post()
                 .execute(new HttpCallback<String>() {
                     @Override
@@ -362,7 +359,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     setValueNull();
                 }else if(model == 1){
                     qrcode = edtVehicleTicket.getText().toString().trim();
-                    requestData(qrcode);
+                    requestData();
                 }
                 break;
             case R.id.btn_confirm:
@@ -456,7 +453,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 boolean result = matcher.matches();
                 if(result){
                     edtVehicleTicket.setText(sentence.toString());
-                    requestData(sentence.toString());
+                    requestData();
                 }else{
                     model = 0;
                     imgScan.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic_black_24dp));
